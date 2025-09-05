@@ -198,8 +198,15 @@ class TestOFTtoEMLConverter(unittest.TestCase):
         # Create dummy OFT file
         Path(self.test_oft).touch()
         
-        # Run conversion
-        convert_oft_to_eml(self.test_oft, self.test_eml)
+        # Run conversion with suppressed output to avoid Windows encoding issues
+        import io
+        import sys
+        original_stdout = sys.stdout
+        sys.stdout = io.StringIO()  # Suppress print output during testing
+        try:
+            convert_oft_to_eml(self.test_oft, self.test_eml)
+        finally:
+            sys.stdout = original_stdout
         
         # Verify Unicode handling
         with open(self.test_eml, 'r', encoding='utf-8') as f:
