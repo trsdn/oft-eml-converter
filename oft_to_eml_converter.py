@@ -119,10 +119,18 @@ def convert_oft_to_eml(oft_file_path, eml_file_path=None):
         
         # Print some info about the converted message
         print("\n--- Message Info ---")
-        print(f"From: {msg.sender or 'N/A'}")
-        print(f"To: {msg.to or 'N/A'}")
-        print(f"Subject: {msg.subject or 'N/A'}")
-        print(f"Date: {msg.date or 'N/A'}")
+        try:
+            print(f"From: {msg.sender or 'N/A'}")
+            print(f"To: {msg.to or 'N/A'}")
+            print(f"Subject: {msg.subject or 'N/A'}")
+            print(f"Date: {msg.date or 'N/A'}")
+        except UnicodeEncodeError:
+            # Handle Windows console encoding issues
+            print("From:", repr(msg.sender) if msg.sender else 'N/A')
+            print("To:", repr(msg.to) if msg.to else 'N/A')  
+            print("Subject:", repr(msg.subject) if msg.subject else 'N/A')
+            print("Date:", repr(msg.date) if msg.date else 'N/A')
+        
         print(f"Body length: {len(msg.body) if msg.body else 0} chars")
         print(f"HTML body length: {len(msg.htmlBody) if msg.htmlBody else 0} chars")
         print(f"Attachments: {len(msg.attachments) if msg.attachments else 0}")
