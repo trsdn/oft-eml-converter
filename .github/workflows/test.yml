@@ -213,12 +213,12 @@ jobs:
         for pkg in required_packages:
             try:
                 __import__(pkg)
-                print(f'✓ {pkg}')
+                print(f'[OK] {pkg}')
             except ImportError as e:
                 if pkg == 'tkinter':
-                    print(f'⚠ {pkg} (GUI not available - expected in some environments)')
+                    print(f'[WARNING] {pkg} (GUI not available - expected in some environments)')
                 else:
-                    print(f'✗ {pkg}: {e}')
+                    print(f'[FAIL] {pkg}: {e}')
                     failed.append(pkg)
         
         if failed:
@@ -242,7 +242,7 @@ jobs:
             print('ERROR: Should have failed with non-existent file')
             exit(1)
         except FileNotFoundError:
-            print('✓ Non-existent file handling works')
+            print('[OK] Non-existent file handling works')
         
         # Test 2: Invalid file extension (but file exists)
         with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as f:
@@ -255,7 +255,7 @@ jobs:
             print('ERROR: Should have failed with invalid file format')
             exit(1)
         except Exception as e:
-            print(f'✓ Invalid file format handling works: {type(e).__name__}')
+            print(f'[OK] Invalid file format handling works: {type(e).__name__}')
         finally:
             os.unlink(temp_file)
         
