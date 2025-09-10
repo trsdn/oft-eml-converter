@@ -1,5 +1,11 @@
 # OFT to EML Converter
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/trsdn/oft-eml-converter)](https://github.com/trsdn/oft-eml-converter/releases)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![Test Suite](https://github.com/trsdn/oft-eml-converter/workflows/Test%20Suite/badge.svg)](https://github.com/trsdn/oft-eml-converter/actions)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#system-requirements)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A Python application for converting Microsoft Outlook Template (.oft) files to standard EML format with embedded image support.
 
 ## Features
@@ -15,14 +21,14 @@ A Python application for converting Microsoft Outlook Template (.oft) files to s
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.8 or higher (3.8-3.12 officially supported)
 - tkinter (usually included with Python)
 
 ### Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/oft-eml-converter.git
+   git clone https://github.com/trsdn/oft-eml-converter.git
    cd oft-eml-converter
    ```
 
@@ -34,7 +40,7 @@ A Python application for converting Microsoft Outlook Template (.oft) files to s
 
 3. Install dependencies:
    ```bash
-   pip install extract-msg
+   pip install -r requirements.txt
    ```
 
 ## Usage
@@ -113,9 +119,10 @@ oft-eml-converter/
 
 ### System Requirements
 
-- Python 3.7+
+- Python 3.8+ (officially tested on 3.8-3.12)
 - 50MB free disk space
 - Internet connection for initial setup
+- Supported OS: Windows 10+, macOS 10.15+, Ubuntu 20.04+
 
 ## Troubleshooting
 
@@ -134,10 +141,12 @@ oft-eml-converter/
 
 ### Getting Help
 
-1. Check that all dependencies are installed
-2. Verify your Python version: `python --version`
+1. Check that all dependencies are installed: `pip list`
+2. Verify your Python version: `python --version` (should be 3.8+)
 3. Run with verbose output for debugging
-4. Open an issue if problems persist
+4. Check our [CI/CD status](https://github.com/trsdn/oft-eml-converter/actions) to ensure the latest build is working
+5. Review [existing issues](https://github.com/trsdn/oft-eml-converter/issues) for similar problems
+6. [Open a new issue](https://github.com/trsdn/oft-eml-converter/issues/new) if your problem persists
 
 ## Contributing
 
@@ -146,10 +155,25 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Development Setup
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with sample OFT files
-5. Submit a pull request
+2. Clone your fork: `git clone https://github.com/yourusername/oft-eml-converter.git`
+3. Create a feature branch: `git checkout -b feature-name`
+4. Set up development environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+5. Make your changes
+6. Run tests: `pytest tests/ -v` or `python -m tests.test_converter`
+7. Ensure CI passes locally
+8. Submit a pull request with a clear description
+
+### Code Style
+
+- Follow PEP 8 guidelines
+- Use meaningful variable names
+- Add docstrings for functions and classes
+- Include tests for new functionality
 
 ## License
 
@@ -162,6 +186,15 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Inspired by the need for reliable OFT to EML conversion
 
 ## Changelog
+
+### v1.1.0 *(Latest)*
+- Enhanced CI/CD with comprehensive cross-platform testing
+- Advanced CLI converter error handling validation
+- Virtual environment creation and management testing
+- Headless-safe GUI import testing for CI environments
+- Cross-platform file operations validation
+- Package requirement verification system
+- Professional release management with GitHub Actions
 
 ### v1.0.0
 - Initial release
