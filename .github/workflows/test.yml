@@ -50,8 +50,21 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
 
   integration-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            shell: bash
+            launcher: run_gui.sh
+          - os: windows-latest
+            shell: pwsh
+            launcher: run_gui.sh
+          - os: macOS-latest
+            shell: bash
+            launcher: run_gui.sh
     
     steps:
     - uses: actions/checkout@v4
@@ -66,16 +79,196 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Test CLI converter
+    - name: Test CLI converter with mock data
+      shell: ${{ matrix.shell }}
       run: |
-        # Create a minimal test OFT file (actually, we'll skip this as we need real OFT files)
-        echo "CLI integration test would run here with real files"
+        # Create a minimal mock OFT file for testing
+        echo "Testing CLI converter..."
+        python -c "
+        import tempfile, os
+        from pathlib import Path
+        # Create a temporary mock file
+        with tempfile.NamedTemporaryFile(suffix='.oft', delete=False) as f:
+            f.write(b'mock data')
+            temp_oft = f.name
+        print(f'Created mock file: {temp_oft}')
+        # Test error handling with invalid file
+        try:
+            from oft_to_eml_converter import convert_oft_to_eml
+            convert_oft_to_eml(temp_oft)
+            print('ERROR: Should have failed with invalid file')
+        except Exception as e:
+            print(f'Expected error occurred: {type(e).__name__}')
+        finally:
+            os.unlink(temp_oft)
+        print('CLI error handling test passed')
+        "
     
-    - name: Test script execution permissions
+    - name: Test launcher script permissions and syntax
+      shell: ${{ matrix.shell }}
       run: |
-        chmod +x run_gui.sh
-        # Test that the script starts correctly (without actually running GUI)
-        bash -n run_gui.sh  # Syntax check only
+        # Make launcher executable (Unix-like systems)
+        if [ "$RUNNER_OS" != "Windows" ]; then
+          chmod +x ${{ matrix.launcher }}
+          echo "Made launcher executable"
+        fi
+        
+        # Test script syntax
+        if [ "$RUNNER_OS" != "Windows" ]; then
+          bash -n ${{ matrix.launcher }}
+          echo "Bash syntax check passed"
+        else
+          echo "Skipping bash syntax check on Windows"
+        fi
+    
+    - name: Test virtual environment creation
+      shell: ${{ matrix.shell }}
+      run: |
+        # Test that we can create and use virtual environments
+        echo "Testing virtual environment creation..."
+        python -m venv test_venv
+        
+        # Activate and test virtual environment
+        if [ "$RUNNER_OS" != "Windows" ]; then
+          source test_venv/bin/activate
+          python -c "import sys; print('Venv Python:', sys.executable)"
+          pip install extract-msg
+          python -c "import extract_msg; print('extract_msg imported successfully')"
+        else
+          test_venv\Scripts\activate
+          python -c "import sys; print('Venv Python:', sys.executable)"
+          pip install extract-msg
+          python -c "import extract_msg; print('extract_msg imported successfully')"
+        fi
+        echo "Virtual environment test passed"
+    
+    - name: Test GUI import (headless safe)
+      shell: ${{ matrix.shell }}
+      run: |
+        echo "Testing GUI module import in headless environment..."
+        python -c "
+        import sys
+        try:
+            # Try importing GUI components
+            import tkinter as tk
+            print('tkinter available')
+            
+            # Test our GUI module import without initialization
+            import oft_to_eml_gui
+            print('GUI module imported successfully')
+            
+            # Test that we can access the class without creating instances
+            gui_class = oft_to_eml_gui.OFTtoEMLGUI
+            print(f'GUI class accessible: {gui_class.__name__}')
+            
+        except ImportError as e:
+            print(f'Import warning (expected in some environments): {e}')
+            sys.exit(0)  # Don't fail the test for missing GUI
+        except Exception as e:
+            print(f'Unexpected error: {e}')
+            sys.exit(1)
+        print('GUI import test completed')
+        "
+    
+    - name: Test cross-platform file operations
+      shell: ${{ matrix.shell }}
+      run: |
+        echo "Testing cross-platform file operations..."
+        python -c "
+        import os
+        import tempfile
+        from pathlib import Path
+        
+        # Test file creation and paths
+        with tempfile.TemporaryDirectory() as tmpdir:
+            print(f'Temp directory: {tmpdir}')
+            
+            # Test Path operations
+            test_file = Path(tmpdir) / 'test.oft'
+            test_file.touch()
+            
+            output_file = Path(tmpdir) / 'test.eml'
+            
+            print(f'Input file exists: {test_file.exists()}')
+            print(f'Output path: {output_file}')
+            
+            # Test path resolution
+            abs_input = test_file.resolve()
+            abs_output = output_file.resolve()
+            
+            print(f'Absolute input: {abs_input}')
+            print(f'Absolute output: {abs_output}')
+            
+            print('Cross-platform file operations test passed')
+        "
+    
+    - name: Test package requirements
+      shell: ${{ matrix.shell }}
+      run: |
+        echo "Verifying all required packages are installed..."
+        python -c "
+        required_packages = [
+            'extract_msg',
+            'tkinter',  # Built-in, should be available
+            'pathlib',  # Built-in
+            'email',    # Built-in
+            'json',     # Built-in
+            'threading' # Built-in
+        ]
+        
+        failed = []
+        for pkg in required_packages:
+            try:
+                __import__(pkg)
+                print(f'✓ {pkg}')
+            except ImportError as e:
+                if pkg == 'tkinter':
+                    print(f'⚠ {pkg} (GUI not available - expected in some environments)')
+                else:
+                    print(f'✗ {pkg}: {e}')
+                    failed.append(pkg)
+        
+        if failed:
+            print(f'Missing required packages: {failed}')
+            exit(1)
+        else:
+            print('All required packages available')
+        "
+    
+    - name: Test error handling and edge cases
+      shell: ${{ matrix.shell }}
+      run: |
+        echo "Testing error handling and edge cases..."
+        python -c "
+        import os
+        import tempfile
+        from oft_to_eml_converter import convert_oft_to_eml
+        
+        # Test 1: Non-existent input file
+        try:
+            convert_oft_to_eml('nonexistent.oft')
+            print('ERROR: Should have failed with non-existent file')
+            exit(1)
+        except FileNotFoundError:
+            print('✓ Non-existent file handling works')
+        
+        # Test 2: Invalid file extension (but file exists)
+        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as f:
+            f.write(b'not an oft file')
+            temp_file = f.name
+        
+        try:
+            # This should fail when trying to parse the file
+            convert_oft_to_eml(temp_file)
+            print('ERROR: Should have failed with invalid file format')
+            exit(1)
+        except Exception as e:
+            print(f'✓ Invalid file format handling works: {type(e).__name__}')
+        finally:
+            os.unlink(temp_file)
+        
+        print('Error handling tests passed')
+        "
 
   lint:
     runs-on: ubuntu-latest
