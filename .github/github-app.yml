@@ -1,0 +1,31 @@
+# Repository configuration for the GitHub Copilot app.
+#
+# The authoritative instructions for this repository are in AGENTS.md. This file
+# points at them rather than restating them, so the two cannot drift apart.
+
+instructions: |
+  Read AGENTS.md in the repository root and follow it. It is the authoritative
+  guidance for this repository.
+
+  The three rules most often broken here:
+
+  1. Do not implement MSG or OFT binary parsing by hand. The format is delegated
+     to extract-msg on purpose. See docs/decisions/0001-delegate-msg-parsing.md.
+  2. The conversion core must stay importable without a display. The GUI imports
+     the core, never the reverse.
+  3. CLI output is plain ASCII, without colour or Unicode decoration. That is an
+     accessibility property, not an oversight.
+
+  Run the Validate script before proposing any change.
+
+scripts:
+  - name: Validate
+    command: >-
+      python -m pytest tests/ -v &&
+      flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics &&
+      black --check . &&
+      isort --check-only .
+
+automation:
+  auto_issue_session: true
+  remote_control: false
