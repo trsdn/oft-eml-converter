@@ -191,8 +191,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Repository activity
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/stats/repo-card-dark.svg">
-  <img alt="Repository statistics" src=".github/stats/repo-card.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/trsdn/oft-eml-converter/stats/.github/stats/repo-card-dark.svg">
+  <img alt="Repository statistics" src="https://raw.githubusercontent.com/trsdn/oft-eml-converter/stats/.github/stats/repo-card.svg">
 </picture>
 
 ## License
