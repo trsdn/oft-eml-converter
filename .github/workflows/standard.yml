@@ -1,0 +1,38 @@
+name: Standard
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    name: Conformance record
+    uses: trsdn/.github/.github/workflows/conformance.yml@main
+
+  badges:
+    name: Badge drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # P08 allows a hand-written badge value only when a check fails on drift.
+      # The Python badge duplicates the CI matrix, so compare the two directly.
+      - name: Python badge matches the lowest tested version
+        run: |
+          set -euo pipefail
+          badge="$(sed -n 's|.*shields\.io/badge/python-\([0-9.]*\)%2B-blue.*|\1|p' README.md | head -1)"
+          matrix="$(sed -n "s/.*python-version: \['\([0-9.]*\)'.*/\1/p" .github/workflows/test.yml | head -1)"
+          if [ -z "$badge" ] || [ -z "$matrix" ]; then
+            echo "could not read badge ('$badge') or matrix ('$matrix')" >&2
+            exit 1
+          fi
+          if [ "$badge" != "$matrix" ]; then
+            echo "README badge claims Python $badge, CI matrix starts at $matrix" >&2
+            exit 1
+          fi
+          echo "Python badge and CI matrix agree on $badge"

@@ -1,12 +1,16 @@
 # OFT to EML Converter
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/trsdn/oft-eml-converter)](https://github.com/trsdn/oft-eml-converter/releases)
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
-[![Test Suite](https://github.com/trsdn/oft-eml-converter/workflows/Test%20Suite/badge.svg)](https://github.com/trsdn/oft-eml-converter/actions)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#system-requirements)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/github/license/trsdn/oft-eml-converter)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](#system-requirements)
+[![Test Suite](https://github.com/trsdn/oft-eml-converter/actions/workflows/test.yml/badge.svg)](https://github.com/trsdn/oft-eml-converter/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/trsdn/oft-eml-converter)](https://github.com/trsdn/oft-eml-converter/releases)
+[![Conformance](.github/badges/conformance.svg)](docs/self-assessment.md)
 
 A Python application for converting Microsoft Outlook Template (.oft) files to standard EML format with embedded image support.
+
+Its language is English, and it ships no localized content. See `L01` and `L03`.
+
+**This tool runs entirely on your machine.** It reads the files you point it at, writes the results next to them, and contacts no network service. See [Data handling](#data-handling).
 
 ## Features
 
@@ -99,16 +103,7 @@ The converter:
 - **Attachments**: Regular file attachments
 - **Embedded Images**: Inline images with proper Content-ID mapping
 
-### File Structure
-
-```
-oft-eml-converter/
-├── oft_to_eml_converter.py    # Core conversion logic
-├── oft_to_eml_gui.py          # GUI application
-├── run_gui.sh                 # GUI launcher script
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
-```
+For how the pieces fit together and why, see [Architecture](docs/ARCHITECTURE.md) and the [decision records](docs/decisions/).
 
 ## Requirements
 
@@ -121,8 +116,26 @@ oft-eml-converter/
 
 - Python 3.8+ (officially tested on 3.8-3.12)
 - 50MB free disk space
-- Internet connection for initial setup
 - Supported OS: Windows 10+, macOS 10.15+, Ubuntu 20.04+
+- Internet access is needed **once**, to install dependencies. The converter itself never uses the network.
+
+## Data handling
+
+- **What is collected:** nothing. There is no telemetry, no analytics, and no crash reporting.
+- **What is transmitted:** nothing. Conversion is entirely local, and the tool does not resolve remote references even when the HTML body it copies contains them.
+- **What is stored:** the `.eml` files you asked for, in the output directory you chose. The GUI additionally writes `converter_config.json` in the directory it was started from, holding only your last output directory. Delete that file to reset it; nothing else persists.
+- **Outbound network destinations:** PyPI, and only during `pip install -r requirements.txt`. At runtime there are none.
+
+## Accessibility
+
+- The command-line interface prints plain ASCII. It uses no colour, no Unicode box drawing, and no emoji, so it stays readable on a terminal without colour support and through a screen reader.
+- **Known limitation:** the Tkinter GUI has not been audited with a screen reader, and its accessible names come from whatever Tkinter exposes by default. The command-line interface is the accessible path, and it can do everything the GUI can do.
+
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The public surface is the CLI invocation and the `convert_oft_to_eml` function; a breaking change to either raises the major version. Dropping a Python version from the supported range is a breaking change.
+
+Releases are tagged `vMAJOR.MINOR.PATCH`. See the [changelog](CHANGELOG.md).
 
 ## Troubleshooting
 
@@ -155,7 +168,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Development Setup
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/yourusername/oft-eml-converter.git`
+2. Clone your fork: `git clone https://github.com/<your-account>/oft-eml-converter.git`
 3. Create a feature branch: `git checkout -b feature-name`
 4. Set up development environment:
    ```bash
@@ -175,9 +188,26 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - Add docstrings for functions and classes
 - Include tests for new functionality
 
+## Repository activity
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/stats/repo-card-dark.svg">
+  <img alt="Repository statistics" src=".github/stats/repo-card.svg">
+</picture>
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT — see [LICENSE](LICENSE).
+
+This project depends on [`extract-msg`](https://github.com/TeamMsgExtractor/msg-extractor) (GPL-3.0) as a runtime dependency installed separately via pip. It is neither vendored nor redistributed here, so the MIT licence applies to all source in this repository.
+
+## Security
+
+Report vulnerabilities privately. See [SECURITY.md](SECURITY.md).
+
+## Support status
+
+Actively maintained by [@trsdn](https://github.com/trsdn). Issues and pull requests are welcome; response times are best-effort.
 
 ## Acknowledgments
 
@@ -187,18 +217,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Changelog
 
-### v1.1.0 *(Latest)*
-- Enhanced CI/CD with comprehensive cross-platform testing
-- Advanced CLI converter error handling validation
-- Virtual environment creation and management testing
-- Headless-safe GUI import testing for CI environments
-- Cross-platform file operations validation
-- Package requirement verification system
-- Professional release management with GitHub Actions
-
-### v1.0.0
-- Initial release
-- GUI and command-line interfaces
-- Embedded image support
-- Batch processing
-- Cross-platform compatibility
+See [CHANGELOG.md](CHANGELOG.md).
