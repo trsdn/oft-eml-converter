@@ -133,7 +133,9 @@ For how the pieces fit together and why, see [Architecture](docs/ARCHITECTURE.md
 
 ## Versioning
 
-This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The public surface is the CLI invocation and the `convert_oft_to_eml` function; a breaking change to either raises the major version. Dropping a Python version from the supported range is a breaking change.
+This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The public surface is the CLI invocation and the `convert_oft_to_eml` function; a breaking change to either raises the major version.
+
+Narrowing the supported Python range raises the major version only when the converter genuinely stops working on a version that was removed — because the code adopts syntax that version lacks, or because a runtime dependency raises its own floor past it. Removing a version from the test matrix and the documented range while the converter still runs there unchanged narrows what is promised and tested, not what works, and is a minor release.
 
 Releases are tagged `vMAJOR.MINOR.PATCH`. See the [changelog](CHANGELOG.md).
 
