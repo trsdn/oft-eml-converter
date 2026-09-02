@@ -16,6 +16,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        # Marks the single leg that uploads coverage. This is an "include"
+        # rather than a hard-coded condition on the upload step so the upload
+        # cannot silently disappear: if this pair ever stops matching a leg of
+        # the matrix above, Actions appends it as a new combination instead of
+        # matching nothing at all. A plain "if" comparing against a version
+        # string would just stop firing, with no error and no coverage.
+        include:
+          - os: ubuntu-latest
+            python-version: '3.11'
+            coverage: true
 
     steps:
     - uses: actions/checkout@v7
@@ -50,7 +60,7 @@ jobs:
         files: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.coverage
 
   integration:
     runs-on: ${{ matrix.os }}
@@ -65,6 +75,10 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v7
       with:
+        # One representative version from the supported range. These checks
+        # exercise packaging, the launcher and cross-platform paths, none of
+        # which are version-sensitive; the "test" matrix above is what covers
+        # every supported interpreter. Keep this inside that range.
         python-version: '3.11'
     
     - name: Install dependencies
@@ -298,6 +312,11 @@ jobs:
         fi
         echo "All integration test legs succeeded."
 
+  # "lint" is a required status check, so it has to stay a single job. Giving it
+  # a matrix would replace the bare "lint" context with one context per leg, and
+  # the requirement would then never be reported — which is exactly how every
+  # pull request in this repository became unmergeable before the gate above was
+  # added. The same applies to "Badge drift" in standard.yml.
   lint:
     runs-on: ubuntu-latest
     
@@ -307,6 +326,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v7
       with:
+        # Linting is not version-sensitive here; pin one version from the
+        # supported range rather than tracking the newest release.
         python-version: '3.11'
     
     - name: Install linting tools
