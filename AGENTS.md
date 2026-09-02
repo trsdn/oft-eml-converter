@@ -41,7 +41,7 @@ python3 -m venv venv
 python -m pip install -r requirements.txt
 ```
 
-Python 3.8 or newer. The supported range is pinned by the CI matrix in `.github/workflows/test.yml` and stated in the README; those two must agree.
+Python 3.9 or newer. The supported range is pinned by the CI matrix in `.github/workflows/test.yml` and stated in the README; those two must agree.
 
 `tkinter` is required for the GUI and cannot be installed with pip. On macOS use `brew install python-tk`, on Debian or Ubuntu `apt-get install python3-tk`.
 

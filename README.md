@@ -1,7 +1,7 @@
 # OFT to EML Converter
 
 [![License](https://img.shields.io/github/license/trsdn/oft-eml-converter)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](#system-requirements)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](#system-requirements)
 [![Test Suite](https://github.com/trsdn/oft-eml-converter/actions/workflows/test.yml/badge.svg)](https://github.com/trsdn/oft-eml-converter/actions/workflows/test.yml)
 [![Release](https://img.shields.io/github/v/release/trsdn/oft-eml-converter)](https://github.com/trsdn/oft-eml-converter/releases)
 [![Conformance](.github/badges/conformance.svg)](docs/self-assessment.md)
@@ -25,7 +25,7 @@ Its language is English, and it ships no localized content. See `L01` and `L03`.
 
 ### Prerequisites
 
-- Python 3.8 or higher (3.8-3.12 officially supported)
+- Python 3.9 or higher (3.9-3.12 officially supported)
 - tkinter (usually included with Python)
 
 ### Setup
@@ -114,7 +114,7 @@ For how the pieces fit together and why, see [Architecture](docs/ARCHITECTURE.md
 
 ### System Requirements
 
-- Python 3.8+ (officially tested on 3.8-3.12)
+- Python 3.9+ (officially tested on 3.9-3.12)
 - 50MB free disk space
 - Supported OS: Windows 10+, macOS 10.15+, Ubuntu 20.04+
 - Internet access is needed **once**, to install dependencies. The converter itself never uses the network.
@@ -155,7 +155,7 @@ Releases are tagged `vMAJOR.MINOR.PATCH`. See the [changelog](CHANGELOG.md).
 ### Getting Help
 
 1. Check that all dependencies are installed: `pip list`
-2. Verify your Python version: `python --version` (should be 3.8+)
+2. Verify your Python version: `python --version` (should be 3.9+)
 3. Run with verbose output for debugging
 4. Check our [CI/CD status](https://github.com/trsdn/oft-eml-converter/actions) to ensure the latest build is working
 5. Review [existing issues](https://github.com/trsdn/oft-eml-converter/issues) for similar problems
@@ -191,8 +191,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Repository activity
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/stats/repo-card-dark.svg">
-  <img alt="Repository statistics" src=".github/stats/repo-card.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/trsdn/oft-eml-converter/stats/.github/stats/repo-card-dark.svg">
+  <img alt="Repository statistics" src="https://raw.githubusercontent.com/trsdn/oft-eml-converter/stats/.github/stats/repo-card.svg">
 </picture>
 
 ## License

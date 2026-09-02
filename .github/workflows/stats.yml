@@ -20,5 +20,8 @@ jobs:
       output-dir: .github/stats
       theme: both
       cards: repo-card
+      # main is protected, so GITHUB_TOKEN cannot push to it. The card is
+      # generated onto its own branch and referenced from there.
+      branch: stats
     secrets:
       STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
