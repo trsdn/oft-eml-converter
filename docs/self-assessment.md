@@ -65,7 +65,7 @@ The record is the machine-readable result; this document holds the reasoning. Wh
 | S01 | **partial** | Setup is documented and reproducible, but `requirements.txt` uses lower bounds rather than a lockfile, so two clean checkouts can resolve different versions |
 | S02 | pass | Suite covers conversion, CLI error paths, headless import, and cross-platform file handling |
 | S03 | pass | `flake8`, `black`, `isort`, and `mypy` run in CI |
-| S04 | pass | Windows, macOS, and Linux across Python 3.8 to 3.12 — every version the README claims |
+| S04 | pass | Windows, macOS, and Linux across Python 3.9 to 3.12 — every version the README claims |
 | S05 | pass | Secret scanning and push protection enabled |
 | S06 | na | No environment-driven configuration surface. The only stored setting is a local last-used directory, which exposes nothing |
 | S07 | pass | Errors name the file and the cause. Message headers are printed to the user's own terminal about the user's own file; nothing is transmitted |
