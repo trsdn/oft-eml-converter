@@ -13,6 +13,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - This changelog.
 - Dependabot configuration for pip and GitHub Actions.
 - Declared primary language, data handling, network behaviour, and accessibility properties in the README.
+- Python 3.13 and 3.14 to the CI matrix. Both are maintained upstream, so under the support policy stated below they are tested rather than merely tolerated. The matrix now covers every maintained interpreter: 3.10 through 3.14.
 
 ### Changed
 
@@ -21,7 +22,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Removed
 
-- Python 3.8 and 3.9 support. Both have reached end of life — 3.8 in October 2024, 3.9 in October 2025 — and neither receives security fixes. The supported range is now 3.10 through 3.12, in the CI matrix and the README alike. The project's policy is to test only interpreters that are still maintained upstream.
+- Python 3.8 and 3.9 support. Both have reached end of life — 3.8 in October 2024, 3.9 in October 2025 — and neither receives security fixes. The supported range is now 3.10 through 3.14, in the CI matrix and the README alike. The project's policy is to test every interpreter that is still maintained upstream, and only those.
 
 ### Fixed
 
