@@ -18,6 +18,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - `AGENTS.md` replaced. It previously held a development retrospective rather than operating instructions; the technical substance moved into `docs/decisions/`.
 
+### Removed
+
+- Python 3.8 support. It reached end of life in October 2024 and no longer receives security fixes, and the test tooling this project depends on has stopped publishing builds for it. The supported range is now 3.9 through 3.12, in the CI matrix and the README alike.
+
+### Fixed
+
+- No pull request could be merged, however green its checks. The branch ruleset requires a status check named `integration-test`, but the job of that name was a matrix, and a matrix reports one check per leg with the matrix values appended — so the bare name was never reported. The matrix job is now `integration`, and a dedicated `integration-test` job gates on its result. That job fails on any result other than success, because a `needs` dependency on a skipped job otherwise counts as satisfied, which would have let the requirement pass exactly when the integration tests had not run.
+
 ## [1.1.0] — 2025-09-05
 
 ### Added

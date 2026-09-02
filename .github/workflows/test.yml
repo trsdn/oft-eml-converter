@@ -6,16 +6,19 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v7
@@ -42,14 +45,14 @@ jobs:
       continue-on-error: true  # GUI might not work in headless environment
     
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3
       with:
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
 
-  integration-test:
+  integration:
     runs-on: ${{ matrix.os }}
     needs: test
     strategy:
@@ -57,7 +60,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     
     - name: Set up Python
       uses: actions/setup-python@v7
@@ -262,11 +265,44 @@ jobs:
         print('Error handling tests passed')
         "
 
+  # Reports the single check named "integration-test", which the branch ruleset
+  # requires. The matrix job above cannot satisfy that requirement itself: a
+  # matrix reports one check per leg, each carrying the matrix values in its
+  # name, so the bare name is never reported while the legs actually run.
+  #
+  # The matrix job is named "integration" rather than "integration-test" so the
+  # two can never collide. A matrix job that is skipped outright collapses to a
+  # single check under its own bare name, which would otherwise produce two
+  # checks called "integration-test" in exactly the case that matters most.
+  #
+  # This must fail on any result other than success. A "needs" dependency on a
+  # skipped job is treated as satisfied, so a gate that only ran on success
+  # would pass exactly when the integration tests did not run. Skipping is the
+  # normal outcome when the "test" matrix fails, since "integration" needs it,
+  # which is how this also gates on the unit test matrix.
+  integration-test-gate:
+    name: integration-test
+    runs-on: ubuntu-latest
+    needs: integration
+    if: always()
+
+    steps:
+    - name: Require the integration test matrix to have succeeded
+      env:
+        RESULT: ${{ needs.integration.result }}
+      run: |
+        echo "integration matrix result: $RESULT"
+        if [ "$RESULT" != "success" ]; then
+          echo "Integration tests did not succeed."
+          exit 1
+        fi
+        echo "All integration test legs succeeded."
+
   lint:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     
     - name: Set up Python
       uses: actions/setup-python@v7
