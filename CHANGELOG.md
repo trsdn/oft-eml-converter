@@ -24,6 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Fixed
 
+- The coverage upload passed `file` to `codecov-action`, an input the action stopped accepting at v4. It was silently discarded, leaving the upload to whatever its own file search happened to find. The input is now `files`, so the report that is uploaded is again the one the step names.
 - No pull request could be merged, however green its checks. The branch ruleset requires a status check named `integration-test`, but the job of that name was a matrix, and a matrix reports one check per leg with the matrix values appended — so the bare name was never reported. The matrix job is now `integration`, and a dedicated `integration-test` job gates on its result. That job fails on any result other than success, because a `needs` dependency on a skipped job otherwise counts as satisfied, which would have let the requirement pass exactly when the integration tests had not run.
 
 ## [1.1.0] — 2025-09-05
