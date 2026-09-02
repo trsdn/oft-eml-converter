@@ -17,10 +17,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - `AGENTS.md` replaced. It previously held a development retrospective rather than operating instructions; the technical substance moved into `docs/decisions/`.
+- The `pytest` floor is now 9.1.1, matching the version the supported interpreters resolve to.
 
 ### Removed
 
-- Python 3.8 support. It reached end of life in October 2024 and no longer receives security fixes, and the test tooling this project depends on has stopped publishing builds for it. The supported range is now 3.9 through 3.12, in the CI matrix and the README alike.
+- Python 3.8 and 3.9 support. Both have reached end of life — 3.8 in October 2024, 3.9 in October 2025 — and neither receives security fixes. The supported range is now 3.10 through 3.12, in the CI matrix and the README alike. The project's policy is to test only interpreters that are still maintained upstream.
 
 ### Fixed
 
