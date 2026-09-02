@@ -17,12 +17,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- The versioning policy no longer treats every narrowing of the supported Python range as a breaking change. It raises the major version only when the converter actually stops working on a removed version, because the code adopts syntax that version lacks or a runtime dependency raises its floor past it. As written before, the rule would have made this release `2.0.0` on account of the 3.8 and 3.9 removals below, despite no Python source having changed since `v1.1.0` and the converter still running unchanged on both.
 - `AGENTS.md` replaced. It previously held a development retrospective rather than operating instructions; the technical substance moved into `docs/decisions/`.
 - The `pytest` floor is now 9.1.1, matching the version the supported interpreters resolve to.
 
 ### Removed
 
-- Python 3.8 and 3.9 support. Both have reached end of life — 3.8 in October 2024, 3.9 in October 2025 — and neither receives security fixes. The supported range is now 3.10 through 3.14, in the CI matrix and the README alike. The project's policy is to test every interpreter that is still maintained upstream, and only those.
+- Python 3.8 and 3.9 support. Both have reached end of life — 3.8 in October 2024, 3.9 in October 2025 — and neither receives security fixes. The supported range is now 3.10 through 3.14, in the CI matrix and the README alike. The project's policy is to test every interpreter that is still maintained upstream, and only those. This narrows what is tested and promised rather than what runs: no Python source changed, and the sole runtime dependency still supports 3.8, so the converter itself continues to work on both.
 
 ### Fixed
 
