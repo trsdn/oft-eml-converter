@@ -175,7 +175,7 @@ def test_feature_description(self):
 
 Our CI/CD pipeline runs tests on:
 - **Operating Systems**: Ubuntu, Windows, macOS
-- **Python Versions**: 3.10, 3.11, 3.12
+- **Python Versions**: 3.10, 3.11, 3.12, 3.13, 3.14
 
 Make sure your changes work across all supported platforms.
 

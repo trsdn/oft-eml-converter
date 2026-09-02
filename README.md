@@ -25,7 +25,7 @@ Its language is English, and it ships no localized content. See `L01` and `L03`.
 
 ### Prerequisites
 
-- Python 3.10 or higher (3.10-3.12 officially supported)
+- Python 3.10 or higher (3.10-3.14 officially supported)
 - tkinter (usually included with Python)
 
 ### Setup
@@ -114,7 +114,7 @@ For how the pieces fit together and why, see [Architecture](docs/ARCHITECTURE.md
 
 ### System Requirements
 
-- Python 3.10+ (officially tested on 3.10-3.12)
+- Python 3.10+ (officially tested on 3.10-3.14)
 - 50MB free disk space
 - Supported OS: Windows 10+, macOS 10.15+, Ubuntu 20.04+
 - Internet access is needed **once**, to install dependencies. The converter itself never uses the network.
